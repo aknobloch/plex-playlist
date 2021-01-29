@@ -3,17 +3,59 @@ from datetime import datetime, timedelta
 from util.argparser import get_arg_parser
 from plexapi.myplex import MyPlexAccount
 
+SIX_MONTHS = 31 * 6
+TWO_YEARS = 365 * 2
+
+USERVER_PATH_PREFIX = "/mnt/data/aknobloch/files/Music/"
+PHONE_PATH_PREFIX = "/storage/emulated/0/Music/"
+
+M3U_HEADER = "#EXTM3U"
+M3U_TITLE_TEMPLATE = "#EXTINF:{},{}"
+
 if __name__ != "__main__":
 
     log.error("Plex Playlist not called directly, exiting...")
     sys.exit()
 
-def save_m3u_playlist(file_location, tracks):
-    # TODO
-    pass
 
-SIX_MONTHS = 31*6
-TWO_YEARS = 365*2
+def save_m3u_playlists(file_location, tracks):
+    userver_m3u_content = [M3U_HEADER]
+    android_m3u_content = [M3U_HEADER]
+
+    userver_file = "userver_" + file_location
+    android_file = "android_" + file_location
+
+    for track in tracks:
+
+        # Get track paths for each platform
+        userver_path = track.media[0].parts[0].file
+        if (not userver_path.startswith(USERVER_PATH_PREFIX)):
+            print("Error! Path name incorrect for {}", userver_path)
+            continue
+        track_relative_path = userver_path[len(USERVER_PATH_PREFIX):]
+        android_path = PHONE_PATH_PREFIX + track_relative_path
+
+        # Create the line items
+        line_title = M3U_TITLE_TEMPLATE.format(int(track.duration / 1000),
+                                               track.title)
+        userver_m3u_content.append(line_title)
+        userver_m3u_content.append(userver_path)
+        android_m3u_content.append(line_title)
+        android_m3u_content.append(android_path)
+
+    # Save each file
+    print("Saving uServer file as {}".format(userver_file))
+    with open(userver_file, "w") as writer:
+        for line_item in userver_m3u_content:
+            writer.write(line_item)
+            writer.write("\n")
+
+    print("Saving Android file as {}".format(android_file))
+    with open(android_file, "w") as writer:
+        for line_item in android_m3u_content:
+            writer.write(line_item)
+            writer.write("\n")
+
 
 args = get_arg_parser().parse_args()
 
@@ -32,11 +74,8 @@ six_month_old_tracks = []
 two_years_ago = datetime.now() - timedelta(days=TWO_YEARS)
 two_year_old_tracks = []
 
-library_size = 0
-
 for artist in music.searchArtists():
     for track in artist.tracks():
-        library_size += 1
 
         if track.addedAt > six_months_ago:
             six_month_old_tracks += track
@@ -45,9 +84,7 @@ for artist in music.searchArtists():
             two_year_old_tracks += track
 
 six_month_old_playlist_title = "six_months_playlist.m3u"
-print("Saving six month old playlist as '{}'. It contains {} songs out of the total collection size of {} songs.".format(six_month_old_playlist_title, len(six_month_old_tracks), library_size))
-save_m3u_playlist(six_month_old_playlist_title, six_month_old_tracks)
+save_m3u_playlists(six_month_old_playlist_title, six_month_old_tracks)
 
 two_year_old_playlist_title = "two_years_playlist.m3u"
-print("Saving two year old playlist as '{}'. It contains {} songs out of the total collection size of {} songs.".format(two_year_old_playlist_title, len(two_year_old_tracks), library_size))
-save_m3u_playlist(two_year_old_playlist_title, two_year_old_tracks)
+save_m3u_playlists(two_year_old_playlist_title, two_year_old_tracks)
