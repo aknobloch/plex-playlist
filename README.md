@@ -11,9 +11,8 @@ The purpose of this is so that you can easily find recently added tracks and do 
 You will need to install the [Plex API](https://github.com/pkkid/python-plexapi), for example: `pip3 install plexapi`.
 
 ## How To Use
-Plex Playlist is a python program, executed from the `plex-playlist.py` file. Run the `plex-playlist.py` file with Python 3, adding positional arguments for your server name, section, username and password. Execute the command `python3 plex-playlist.py --help` for more information on running.
-
-Sample Usage:
 ```
 python3 plex-playlist.py --name uServer --section Music --user aknobloch --password <password>
 ```
+Plex Playlist is a python program, executed from the `plex-playlist.py` file. Run the `plex-playlist.py` file with Python 3, adding positional arguments for your server name, section, username and password. Execute the command `python3 plex-playlist.py --help` for more information on running.
+
