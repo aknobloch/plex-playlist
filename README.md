@@ -1,7 +1,7 @@
 # Plex Playlist
 Plex Playlist currently generates two playlists from your Plex server; one containing all your songs that were added in the last six months, and another with all songs added in the last two years. You could easily modify or extend this script to generate playlists from a variety of criteria. Having an automated way to generate playlists is great, and using a standard format such as M3U allows you to import the playlist into other media players, or simply back them up.
 
-The purpose of this is so that you can easily find recently added tracks and do things like, I don't know, shuffle them? View them? Export them? Why does Plex even have the option to view recently added tracks if you can't do anything with them? Anyways, I digress... 
+The purpose of this is so that you can easily find recently added tracks and do things like, I don't know, shuffle them? Play them? Export them? Why does Plex even have the option to view recently added tracks if you can't do anything with them? Anyways, I digress... 
 
 
 #### System Requirements
